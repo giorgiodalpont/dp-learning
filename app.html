@@ -572,6 +572,13 @@ h3 { margin: 40px 0 12px; }
 .exchoice .btn.picked:not(.right) { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
 .panel > .exhead + .quiz, .panel > .exhead ~ .quiz { margin: 0; }
 
+/* l'avviso \ab nuova versione\bb  sta in cima al contenuto, non sopra: non copre \ab Avanti\bb  n\e9  le risposte */
+.updbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; margin: 16px 0 8px; padding: 14px 16px 14px 20px; border-radius: var(--r-l); background: var(--accent-soft); }
+.updbar .updtxt { display: grid; gap: 2px; flex: 1 1 260px; min-width: 0; }
+.updbar .updtxt span { font-size: var(--fs-sm); color: var(--text-2); }
+.updbar .btnrow { flex-wrap: nowrap; gap: 8px; margin: 0; }
+.updbar .btn.ghost { background: var(--surface); }
+
 /* ---- cinese: frasi a vagoni, quadretti \7530 \5b57 \683c , toni, parola per parola ---- */
 .train { margin: 10px 0 14px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
 .cars { display: flex; flex-wrap: wrap; gap: 6px 4px; align-items: flex-end; }
@@ -956,13 +963,13 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') { const m = 
   window.addEventListener('load', fit); window.addEventListener('resize', fit); setTimeout(fit, 300);
 })();
 /* aggiornamenti dell'app per Mac: la nuova versione \u00e8 gi\u00e0 scaricata, basta riavviare */
-window.BABELE_VERSION = 202610271124;
+window.BABELE_VERSION = 202610271135;
 window.BABELE_UPDATE_READY = notes => {
   if (document.getElementById('updBar')) return;
   const el = document.createElement('div');
-  el.id = 'updBar'; el.className = 'upd'; el.setAttribute('role', 'status');
+  el.id = 'updBar'; el.className = 'updbar'; el.setAttribute('role', 'status');
   el.innerHTML = `<div class="updtxt"><b>Nuova versione di DP Learning</b><span>${String(notes || 'Contenuti e correzioni nuove.').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))}</span></div><div class="btnrow"><button class="btn ghost" type="button" id="updLater">Pi\u00f9 tardi</button><button class="btn primary" type="button" id="updGo">Riavvia per aggiornare</button></div>`;
-  document.body.appendChild(el);
+  const main = document.querySelector('main'); if (main) main.prepend(el); else document.body.appendChild(el);   // in cima alla pagina: non copre i pulsanti
   el.querySelector('#updLater').onclick = () => el.remove();
   el.querySelector('#updGo').onclick = () => { try { window.webkit.messageHandlers.babele.postMessage('relaunch'); } catch (e) { location.reload(); } };
 };
